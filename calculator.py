@@ -1,9 +1,13 @@
 import os
 
+input_txt = "/home/lapos-erdo/Desktop/calculator/numbers.txt"
+output_txt = "/home/lapos-erdo/Desktop/calculator/results.txt"
+
 
 def read_number_pairs(input_file):
-    """Reads number pairs from a file and returns them as a list."""
-    with open(input_file, 'r') as file:
+    if not (os.path.exists(input_file) or not os.access(input_file, os.R_OK)):
+        exit(1)
+    with open(input_file, "r") as file:
         lines = file.readlines()
 
     number_pairs = []
@@ -15,30 +19,22 @@ def read_number_pairs(input_file):
 
 
 def calculate_and_print_results(number_pairs):
-    """Calculate the sum of number pairs and returns them."""
     results = []
     for num1, num2 in number_pairs:
         result = num1 + num2
         results.append(result)
-        print(result)
 
     return results
 
 
 def write_results_to_file(output_file, results):
-    """Writes results to an output file."""
-    with open(output_file, 'w') as file:
+    with open(output_file, "w") as file:
         for result in results:
-            file.write(str(result) + '\n')
+            file.write(str(result) + "\n")
 
 
 if __name__ == "__main__":
-    input_txt = '/home/lapos-erdo/Desktop/calculator/numbers.txt'
-    output_txt = '/home/lapos-erdo/Desktop/calculator/results.txt'
-
     if os.path.exists(input_txt):
         number_pairs = read_number_pairs(input_txt)
         results = calculate_and_print_results(number_pairs)
         write_results_to_file(output_txt, results)
-    else:
-        print(f"Input file '{input_txt}' not found.")
