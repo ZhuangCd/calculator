@@ -1,7 +1,7 @@
 import os
 
 input_file = "/home/lapos-erdo/Desktop/calculator/numbers.txt"
-output_file = "/home/lapos-erdo/Desktop/calculator/results.txt"
+output_file = "/home/lapos-erdo/Desktop/calculator/results1.txt"
 
 
 def validate_file(input_file):
@@ -27,10 +27,15 @@ def add_numbers(number_list):
     return results
 
 
-def write_results_to_file(output_file, results):
+def floats_to_strings(results):
+    string_list = [str(float) for float in results]
+    return string_list
+
+
+def write_results_to_file(output_file, string_list):
     with open(output_file, 'w') as file:
-        for result in results:
-            file.write(str(result) + '\n')
+        for text in string_list:
+            file.write(text + '\n')
 
 
 if __name__ == "__main__":
@@ -38,4 +43,5 @@ if __name__ == "__main__":
         validate_file(input_file)
         number_list = collect_numbers(input_file)
         results = add_numbers(number_list)
-        write_results_to_file(output_file, results) 
+        string_list = floats_to_strings(results)
+        write_results_to_file(output_file, string_list) 
