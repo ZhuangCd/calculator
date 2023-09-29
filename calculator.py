@@ -3,18 +3,6 @@ import argparse
 
 """Run: python adder.py --input /path/to/input.txt --output /path/to/output.txt"""
 
-parser = argparse.ArgumentParser(
-    description="Add numbers from an input file and write results to an output file."
-)
-
-parser.add_argument("--input", type=str, help="Input file path")
-parser.add_argument("--output", type=str, help="Output file path")
-
-args = parser.parse_args()
-
-input_txt = args.input
-output_txt = args.output
-
 
 def validate_file(input_file):
     if not (os.path.exists(input_file) and os.access(input_file, os.R_OK)):
@@ -51,9 +39,14 @@ def write_results_to_file(output_file, string_list):
 
 
 if __name__ == "__main__":
-    if os.path.exists(input_txt):
-        validate_file(input_txt)
-        number_list = collect_numbers(input_txt)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--input", type=str, help="Input file path")
+    parser.add_argument("--output", type=str, help="Output file path")
+    args = parser.parse_args()
+
+    if os.path.exists(args.input):
+        validate_file(args.input)
+        number_list = collect_numbers(args.input)
         results = add_numbers(number_list)
         string_list = floats_to_strings(results)
-        write_results_to_file(output_txt, string_list)
+        write_results_to_file(args.output, string_list)
