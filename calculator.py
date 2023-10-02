@@ -1,7 +1,24 @@
 import os
 import argparse
+import yaml
 
-"""Run: python adder.py --input /path/to/input.txt --output /path/to/output.txt"""
+"""
+- For default config.yaml run
+    python3 calculator.py
+- For different path, run
+    python adder.py --input /path/to/input.txt --output /path/to/output.txt
+        like:
+    python3 calculator.py --input numbers.txt --output results.txt
+"""
+
+
+config_file_path = os.path.join(os.path.dirname(__file__), "config.yaml")
+
+with open(config_file_path, "r") as file:
+    cfg = yaml.safe_load(file)
+
+input_file = cfg.get("input")
+output_file = cfg.get("output")
 
 
 def validate_file(input_file):
@@ -28,7 +45,7 @@ def add_numbers(number_list):
 
 
 def floats_to_strings(results):
-    string_list = [str(result) for result in results]
+    string_list = [str(float) for float in results]
     return string_list
 
 
@@ -44,9 +61,13 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=str, help="Output file path")
     args = parser.parse_args()
 
-    if os.path.exists(args.input):
-        validate_file(args.input)
-        number_list = collect_numbers(args.input)
+    if not os.environ.get("SHELL"):
+        input_file = args.input or cfg.get("input")
+        output_file = args.output or cfg.get("output")
+
+    if os.path.exists(input_file):
+        validate_file(input_file)
+        number_list = collect_numbers(input_file)
         results = add_numbers(number_list)
         string_list = floats_to_strings(results)
-        write_results_to_file(args.output, string_list)
+        write_results_to_file(output_file, string_list)
