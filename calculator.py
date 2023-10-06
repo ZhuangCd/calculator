@@ -1,7 +1,3 @@
-import os
-import argparse
-import yaml
-
 """
 - For default config.yaml run
     python3 calculator.py
@@ -11,19 +7,26 @@ import yaml
     python3 calculator.py --input numbers.txt --output results.txt
 """
 
+import os
+import argparse
+import yaml
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 config_file_path = os.path.join(os.path.dirname(__file__), "config.yaml")
 
 with open(config_file_path, "r") as file:
     cfg = yaml.safe_load(file)
 
-input_file = cfg.get("input")
-output_file = cfg.get("output")
-
 
 def validate_file(input_file):
     if not (os.path.exists(input_file) and os.access(input_file, os.R_OK)):
-        exit(1)
+        raise FileNotFoundError(
+            f"Input file '{input_file}' does not exist or is not readable."
+        )
+    return True
 
 
 def collect_numbers(input_file):
@@ -61,9 +64,8 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=str, help="Output file path")
     args = parser.parse_args()
 
-    if not os.environ.get("SHELL"):
-        input_file = args.input or cfg.get("input")
-        output_file = args.output or cfg.get("output")
+    input_file = args.input or cfg.get("input")
+    output_file = args.output or cfg.get("output")
 
     if os.path.exists(input_file):
         validate_file(input_file)
